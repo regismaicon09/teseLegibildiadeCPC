@@ -1,6 +1,5 @@
 *****************************************************************************************************************************************************
 *************************************************************** ABRIR O ARQUIVO *********************************************************************
-*****************************************************************************************************************************************************
 clear
 set more off
 use "C:\Users\FAGEN\Documents\GitHub\teseLegibildiadeCPC\stata\BaseDadosV1.dta"
@@ -27,8 +26,6 @@ kdensity LegNE, norm
 ladder LegNE //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
 gladder LegNE //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
 
-
-
 *2)winsorização (técnica para tratar os outliers).
 graph box LegNE //muitos outliers *Comentário teórico: O boxplot mostra os outliers. Sem correção
 winsor LegNE, gen(wLegNE) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
@@ -38,81 +35,98 @@ kdensity wLegNE, norm
 
 *search winsorize, all
 
-********end********
-histogram end, norm 
-kdensity end, norm 
+********LegCPC********
+// não faria sentido o cálculo de normalidade pois é valor fixo
+
+
+********RevCPC********
+// variável binária não faz sentido ( podemos chamar de variaveis de controle )
+
+
+********TAM********
+histogram TAM, norm 
+kdensity TAM, norm 
 *1)Tratando a normalidade da variável end
-ladder end //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder end //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar log
-gen lend = log(end)
-histogram lend, norm 
+ladder TAM //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
+gladder TAM //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar log
+gen lTAM = log(TAM)
+histogram lTAM, norm 
+
 *2)winsorização (técnica para tratar os outliers).
-graph box lend //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
-winsor lend, gen(wlend) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box wlend
-histogram wlend, norm 
-kdensity wlend, norm
+graph box lTAM //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+winsor lTAM, gen(wlTAM) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
+graph box wlTAM
+histogram wlTAM, norm 
+kdensity wlTAM, norm
 
+********COMPLEX********
+histogram COMPLEX, norm 
+kdensity COMPLEX, norm 
+*1)Tratando a normalidade da variável end
+ladder COMPLEX //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
+gladder COMPLEX //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar COMPLEX^2  
+gen sCOMPLEX = COMPLEX^2
+histogram sCOMPLEX, norm 
 
-********lc********
-histogram lc, norm 
-kdensity lc, norm 
-*1)Tratando a normalidade da variável lc
-ladder lc //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder lc //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados - transforma inverse
-gen lcinv = 1/lc
 *2)winsorização (técnica para tratar os outliers).
-graph box lcinv //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
-winsor lcinv, gen(wlcinv) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box wlcinv
-histogram wlcinv, norm 
+graph box sCOMPLEX //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+winsor sCOMPLEX, gen(wsCOMPLEX) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
+graph box wsCOMPLEX
+histogram wsCOMPLEX, norm 
+kdensity wsCOMPLEX, norm
 
-********tang********
-histogram tang, norm 
-kdensity tang, norm 
-*1)Tratando a normalidade da variável tang
-ladder tang //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder tang //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
+
+********CAPIT********
+histogram CAPIT, norm 
+kdensity CAPIT, norm 
+*1)Tratando a normalidade da variável end
+ladder CAPIT //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
+gladder CAPIT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(CAPIT)  
+gen sqCAPIT = sqrt(CAPIT) 
+histogram sqCAPIT, norm 
+
 *2)winsorização (técnica para tratar os outliers).
-graph box tang //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
-winsor tang, gen(wtang) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box wtang //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+graph box sqCAPIT //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+winsor sqCAPIT, gen(wsqCAPIT) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
+graph box wsqCAPIT
+histogram wsqCAPIT, norm 
+kdensity wsqCAPIT, norm
 
-********lnrl********
-histogram lnrl, norm 
-kdensity lnrl, norm 
-*1)Tratando a normalidade da variável lnrl
-ladder lnrl //traz as diversas alternativas para transformação da variável 
-gladder lnrl //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados 
+********EXT********
+histogram EXT, norm 
+kdensity EXT, norm 
+*1)Tratando a normalidade da variável end
+ladder EXT //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
+gladder EXT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(sqrt(EXT))  
+gen sqEXT = sqrt(EXT) 
+histogram sqEXT, norm 
+
 *2)winsorização (técnica para tratar os outliers).
-graph box lnrl //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
-winsor lnrl, gen(wlnrl) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box wlnrl
-histogram wlnrl, norm 
+graph box sqEXT //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+winsor sqEXT, gen(WsqEXT) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
+graph box WsqEXT
+histogram WsqEXT, norm 
+kdensity WsqEXT, norm
 
-********lnat********
-histogram lnat, norm 
-kdensity lnat, norm 
-*3)winsorização (técnica para tratar os outliers).
-graph box lnat //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
-winsor lnat, gen(wlnat) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box wlnat
-histogram wlnat, norm 
-kdensity wlnat, norm
 
-tabstat wroe roe wlend lend wlcinv lcinv wtang tang wlnrl lnrl wlnat lnat, s(count min max mean sd cv sk p1 p5 p10 p25 p50 p75 p90 p95 p99)
+
+
+tabstat LegNE wLegNE LegCPC RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR, s(count min max mean sd cv sk p1 p5 p10 p25 p50 p75 p90 p95 p99)
 *Comentário: comando significativo para comparação de diversos resultados estatísticos. Percebe-se uma melhora em todas as variáveis para o coeficiente de assimetria (de Pearson).
 
-summ wroe wlend wlcinv wtang wlnrl wlnat
+summ wLegNE wLegNE LegCPC RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR
 * Comentário teórico: tabelas com descrições estatísticas para países e setores
 
-sfrancia wroe wlend wlcinv wtang wlnrl wlnat
+sfrancia  wLegNE LegCPC RevCPC wlTAM sCOMPLEX wsqCAPIT GC AUDIT EXT ADR
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk para grandes amostras
-sktest wroe wlend wlcinv wtang wlnrl wlnat, noadjust
+
+// https://www.researchgate.net/publication/314032599_TO_DETERMINE_SKEWNESS_MEAN_AND_DEVIATION_WITH_A_NEW_APPROACH_ON_CONTINUOUS_DATA
+
+sktest LegNE wLegNE LegCPC RevCPC wlTAM sCOMPLEX wsqCAPIT GC AUDIT EXT ADR, noadjust
 * Comentário teórico: teste de assimetria e curtose
 * Comentário teórico: Pelos valores dos dois testes pode-se verificar que os termos de erro não apresenlnrl distribuição normal ao nível de significância de 5%, podendo rejeitar a hipótese nula de que os dados possuem distribuição normal.
 
-pwcorr wroe wlend wlcinv wtang wlnrl wlnat, star(0.05) //verifica a correlação (força da associação entre as variáveis) e lnrlbém ajuda a verificar se há problemas de multicolinearidade (altas correlações)
+pwcorr  wLegNE LegCPC RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, star(0.05) //verifica a correlação (força da associação entre as variáveis) e lnrlbém ajuda a verificar se há problemas de multicolinearidade (altas correlações)
 
 qui reg wroe wlend wlcinv wtang wlnrl wlnat
 vif
