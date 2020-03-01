@@ -126,7 +126,7 @@ swilk  wLegNE wlTAM sCOMPLEX wsqCAPIT WsqEXT
 * Foi retirado as variáveis binárias 
 
 
-// https://www.researchgate.net/publication/314032599_TO_DETERMINE_SKEWNESS_MEAN_AND_DEVIATION_WITH_A_NEW_APPROACH_ON_CONTINUOUS_DATA
+*** https://www.researchgate.net/publication/314032599_TO_DETERMINE_SKEWNESS_MEAN_AND_DEVIATION_WITH_A_NEW_APPROACH_ON_CONTINUOUS_DATA
 
 sktest wLegNE wlTAM sCOMPLEX wsqCAPIT WsqEXT, noadjust
 * Comentário teórico: teste de assimetria e curtose
@@ -140,9 +140,11 @@ vif
 *Comentário do resultado: Neste caso não há problemas de multicolinearidade entre as variáveis. Portanto nenhuma das variáveis deve retirada do modelo.
 
 *** Autocorrelação *** 
-quietly regress 
-estat bgodfrey
+quietly regress variables
+estat bgodfrey variables
 
+
+*** Teste de Arch - Heterocedasticidade *** 
 
 **********************************************************************************************************
 **********************************************************************************************************
