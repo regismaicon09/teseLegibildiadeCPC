@@ -110,28 +110,38 @@ kdensity WsqEXT, norm
 
 
 
-
 tabstat LegNE wLegNE LegCPC RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR, s(count min max mean sd cv sk p1 p5 p10 p25 p50 p75 p90 p95 p99)
 *Comentário: comando significativo para comparação de diversos resultados estatísticos. Percebe-se uma melhora em todas as variáveis para o coeficiente de assimetria (de Pearson).
 
 summ wLegNE wLegNE LegCPC RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR
 * Comentário teórico: tabelas com descrições estatísticas para países e setores
 
-sfrancia  wLegNE LegCPC RevCPC wlTAM sCOMPLEX wsqCAPIT GC AUDIT EXT ADR
+sfrancia  wLegNE wlTAM sCOMPLEX wsqCAPIT WsqEXT 
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk para grandes amostras
+* Foi retirado as variáveis binárias 
+
+swilk  wLegNE wlTAM sCOMPLEX wsqCAPIT WsqEXT 
+* Comentário teórico: teste para a detecção de normalidade Shapiro-wilk
+* Foi retirado as variáveis binárias 
+
 
 // https://www.researchgate.net/publication/314032599_TO_DETERMINE_SKEWNESS_MEAN_AND_DEVIATION_WITH_A_NEW_APPROACH_ON_CONTINUOUS_DATA
 
-sktest LegNE wLegNE LegCPC RevCPC wlTAM sCOMPLEX wsqCAPIT GC AUDIT EXT ADR, noadjust
+sktest wLegNE wlTAM sCOMPLEX wsqCAPIT WsqEXT, noadjust
 * Comentário teórico: teste de assimetria e curtose
 * Comentário teórico: Pelos valores dos dois testes pode-se verificar que os termos de erro não apresenlnrl distribuição normal ao nível de significância de 5%, podendo rejeitar a hipótese nula de que os dados possuem distribuição normal.
 
-pwcorr  wLegNE LegCPC RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, star(0.05) //verifica a correlação (força da associação entre as variáveis) e lnrlbém ajuda a verificar se há problemas de multicolinearidade (altas correlações)
+pwcorr  wLegNE  RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, star(0.05) //verifica a correlação (força da associação entre as variáveis) e  ajuda a verificar se há problemas de multicolinearidade (altas correlações)
 
-qui reg wroe wlend wlcinv wtang wlnrl wlnat
+qui reg wLegNE  RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR
 vif
 *Comentário teórico: Cada variável não pode apresentar um valor de VIF individualmente maior que 10 e o VIF médio do modelo lnrlbém não pode ser maior que 10 (HAIR JR. ET AL, 2009). A variável que está causando o problema deve ser retirada do modelo de regressão.
 *Comentário do resultado: Neste caso não há problemas de multicolinearidade entre as variáveis. Portanto nenhuma das variáveis deve retirada do modelo.
+
+*** Autocorrelação *** 
+quietly regress 
+estat bgodfrey
+
 
 **********************************************************************************************************
 **********************************************************************************************************
@@ -144,7 +154,7 @@ vif
 **********************************************************************************************************
 
 ********TESTE DE BREUSCH-PAGAN: POOL X EFEITO ALEATÓRIO; H0: POOL, H1: EFEITO ALEATÓRIO *******************
-qui xtreg wroe wlend wlcinv wtang wlnrl wlnat, re
+qui xtreg wLegNE  RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, re
 xttest0
 *Comentário: Rejeitou-se a menos de 1% a hipótese H0: Pooled. Portanto, o modelo estimado por efeitos aleatórios mostrou-se mais adequado que que o modelo pooled.
 
