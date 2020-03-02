@@ -4,7 +4,7 @@
 clear
 set more off
 *use "C:\Users\FAGEN\Documents\GitHub\teseLegibildiadeCPC\stata\BaseDadosV1.dta"
-use "C:\Users\Regis\Documents\GitHub\teseLegibildiadeCPC\stata\BaseDadosV1.dta"
+use "C:\Users\Regis\Documents\GitHub\teseLegibildiadeCPC\stata\BaseDadosV2_7361.dta"
 
 keep if LegNE !=. | ADR !=. | LegCPC !=. | RevCPC !=. | CAPIT !=. | COMPLEX !=. //manter somente os anos com valores em pelo menos uma variável (são excluidas as linhas que não apresenlnrl valores para as variáveis)
 encode NOME, generate (idempresa) label (NOME) //cria a variável que será utilizada como o indivíduo do painel, transformando-a de string para categórica.
@@ -41,10 +41,8 @@ kdensity wLegNE, norm
 ********LegCPC********
 // não faria sentido o cálculo de normalidade pois é valor fixo
 
-
 ********RevCPC********
 // variável binária não faz sentido ( podemos chamar de variaveis de controle )
-
 
 ********TAM********
 histogram TAM, norm 
@@ -112,16 +110,20 @@ histogram WsqEXT, norm
 kdensity WsqEXT, norm
 
 
-
 tabstat LegNE wLegNE LegCPC RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR, s(count min max mean sd cv sk p1 p5 p10 p25 p50 p75 p90 p95 p99)
 *Comentário: comando significativo para comparação de diversos resultados estatísticos. Percebe-se uma melhora em todas as variáveis para o coeficiente de assimetria (de Pearson).
 
 summ wLegNE wLegNE LegCPC RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR
 * Comentário teórico: tabelas com descrições estatísticas para países e setores
 
+sfrancia  LegNE lTAM COMPLEX CAPIT EXT 
+
+
 sfrancia  wLegNE wlTAM sCOMPLEX wsqCAPIT WsqEXT 
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk para grandes amostras
 * Foi retirado as variáveis binárias 
+
+swilk LegNE lTAM COMPLEX CAPIT EXT
 
 swilk  wLegNE wlTAM sCOMPLEX wsqCAPIT WsqEXT 
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk
@@ -141,12 +143,15 @@ vif
 *Comentário teórico: Cada variável não pode apresentar um valor de VIF individualmente maior que 10 e o VIF médio do modelo lnrlbém não pode ser maior que 10 (HAIR JR. ET AL, 2009). A variável que está causando o problema deve ser retirada do modelo de regressão.
 *Comentário do resultado: Neste caso não há problemas de multicolinearidade entre as variáveis. Portanto nenhuma das variáveis deve retirada do modelo.
 
-*** Autocorrelação *** 
-quietly regress variables
-estat bgodfrey variables
+**********TESTE PARA VERIFICAR SE EXISTE PROBLEMA DE AUTOCORRELAÇÃO: H0: não há autocorrelação; H1: há autocorrelação***********
+***TESTE PARA VERIFICAR SE EXISTE PROBLEMA DE HETEROCEDASTICIDADE: H0: não há heterocedasticidade; H1: há heterocedasticidade***
+findit xtserial //este comando irá instalar o teste de woodridge de autocorrelação. Em seguida clicar em "st0039" e depois "click here to install"
+xtserial wLegNE RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, output //roda o teste de woodridge de autocorrelação. 
 
-
-*** Teste de Arch - Heterocedasticidade *** 
+findit xttest3
+qui xtreg wLegNE RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR,fe
+xttest3 //roda o teste de wald para detecção de heterocedasticidade.
+*Comentários: As hipóteses H0 de ausência de autocorrelação e ausência de heterocedasticidade foram rejeitadas a um nível de significância de 5%. Portanto temos problema de autocorrelação e heterocedasticidade. Neste caso recomenda-se rodar o modelo utilizando o método robust ou bootstrap.
 
 **********************************************************************************************************
 **********************************************************************************************************
@@ -164,31 +169,25 @@ xttest0
 *Comentário: Rejeitou-se a menos de 1% a hipótese H0: Pooled. Portanto, o modelo estimado por efeitos aleatórios mostrou-se mais adequado que que o modelo pooled.
 
 ********TESTE DE CHOW: POOLED X EFEITO FIXO; H0: POOLED, H1: EFEITO FIXO ***********************************
-xtreg wroe wlend wlcinv wtang wlnrl wlnat, fe
+xtreg wLegNE  RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, fe
 *Comentário teórico: Olha-se o valor de Prob > F = 0.05 na regressão. Se 0 < Prob F < 0.05, rejeita-se H0, ou seja o modelo de Efeito Fixo é melhor. Caso contrário não rejeita-se H1, ou seja Pooled é melhor.
-*Comentário do resultado: Neste caso o modelo de efeito fixo mostrou-se mais adequado que o modelo pooled. Após Teste de Breusch-Pagan e Chow, descarta-se o modelo pooled.
+*Comentário do resultado: Neste caso o modelo de efeito fixo mostrou-se mais adequado que o modelo pooled. 
+* Após Teste de Breusch-Pagan e Chow, descarta-se o modelo pooled.
 
 ********TESTE DE HAUSMAN: POOLED X EFEITO FIXO X EFEITO ALEATÓRIO; H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO ***********
-qui xtreg wroe wlend wlcinv wtang wlnrl wlnat, fe
+qui xtreg wLegNE  RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, fe
 estimates store fe
-qui xtreg wroe wlend wlcinv wtang wlnrl wlnat, re
+qui xtreg wLegNE  RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, re
 estimates store re
 
 hausman fe re, sigmamore
 hausman fe re, sigmaless
-*Comentário: com as opções acima descritas para o teste de hausman ocorre a correção para chi2<0 (hausman negativo). Assim, tem-se a escolha pelo Efeito ALEATÓRIO (H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO)
-
-**********TESTE PARA VERIFICAR SE EXISTE PROBLEMA DE AUTOCORRELAÇÃO: H0: não há autocorrelação; H1: há autocorrelação***********
-***TESTE PARA VERIFICAR SE EXISTE PROBLEMA DE HETEROCEDASTICIDADE: H0: não há heterocedasticidade; H1: há heterocedasticidade***
-findit xtserial //este comando irá instalar o teste de woodridge de autocorrelação. Em seguida clicar em "st0039" e depois "click here to install"
-xtserial wroe wlend wlcinv wtang wlnrl wlnat, output //roda o teste de woodridge de autocorrelação. 
-
-findit xttest3
-qui xtreg wroe wlend wlcinv wtang wlnrl wlnat,fe
-xttest3 //roda o teste de wald para detecção de heterocedasticidade.
-
-*Comentários: As hipóteses H0 de ausência de autocorrelação e ausência de heterocedasticidade foram rejeitadas a um nível de significância de 5%. Portanto temos problema de autocorrelação e heterocedasticidade. Neste caso recomenda-se rodar o modelo utilizando o método robust ou bootstrap.
+*Comentário: com as opções acima descritas para o teste de hausman ocorre a correção para chi2<0 (hausman negativo). 
+*Assim, tem-se a escolha pelo Efeito ALEATÓRIO (H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO)
 
 *************************************** MODELOS DE REGRESSÃO ************************************************
+xtreg wLegNE  RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, fe vce(robust)
 
-xtreg wroe wlend wlcinv wtang wlnrl wlnat, fe vce(robust)
+xtreg wLegNE  RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR, re vce(robust)
+
+
