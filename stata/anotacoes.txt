@@ -1,0 +1,6 @@
+Serafini e Sheng (2011)
+
+Teste Chow de forma a verificaf a adequação da relação entre as variáveis ao testar a igualdade dos regressores em duas regressões
+lineares assumiindo uma variância comum. As hipóteses desse teste são: h0: Modelo restrito (pooled) e H1: Modelo irrestrito (dados em painel com efeitos fixos) ( Cameron; Trivedi, 2009).
+
+Teste de Hausman, Modelo aleatório ou efeitos fixos.
