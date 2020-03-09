@@ -24,8 +24,6 @@ codebook //mostra o dicionário das variáveis da base de dados que está sendo uti
 ****Visualizar normalidade das variáveis escalares
 ********LegNEsumpeso********
 
-  
-
 histogram LegNEMedio, norm 
 kdensity LegNEMedio, norm 
 *1)Tratando a normalidade da variável LegNE
@@ -125,6 +123,7 @@ CAPIT
 ********EXT********
 histogram EXT, norm 
 kdensity EXT, norm 
+
 *1)Tratando a normalidade da variável end
 ladder EXT //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
 gladder EXT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(sqrt(EXT))  
@@ -142,6 +141,7 @@ swilk  EXT sqEXT WsqEXT
 sfrancia  EXT sqEXT WsqEXT
 WsqEXT
 
+
 *tabstat LegNEsumpeso LegCPCSUMpeso srLegCPCSUMpeso RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR, s(count min max mean sd cv sk p1 p5 p10 p25 p50 p75 p90 p95 p99)
 
 *tabstat LegNEsumpeso LegCPCSUMpeso srLegCPCSUMpeso RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR, s(count min max mean sd cv sk p1 p5 p10 p25 p50 p75 p90 p95 p99)
@@ -150,11 +150,11 @@ WsqEXT
 
 *summ LegNEsumpeso LegCPCSUMpeso srLegCPCSUMpeso RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR
 
-sum LegNEMedio LegCPCMedio RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR 
+sum LegNEMedio LegCPCMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR 
 *descritiva
 
 
-summ LegNEMedio LegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
+sum LegNEMedio LegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
 * Comentário teórico: tabelas com descrições estatísticas 
 
 ****** Teste de Normalidade ***** 
@@ -189,13 +189,15 @@ vif
 
 **********TESTE PARA VERIFICAR SE EXISTE PROBLEMA DE AUTOCORRELAÇÃO: H0: não há autocorrelação; H1: há autocorrelação***********
 ***TESTE PARA VERIFICAR SE EXISTE PROBLEMA DE HETEROCEDASTICIDADE: H0: não há heterocedasticidade; H1: há heterocedasticidade***
-*findit xtserial //este comando irá instalar o teste de woodridge de autocorrelação. Em seguida clicar em "st0039" e depois "click here to install"
+findit xtserial //este comando irá instalar o teste de woodridge de autocorrelação. Em seguida clicar em "st0039" e depois "click here to install"
 xtserial LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, output //roda o teste de woodridge de autocorrelação. 
 
 findit xttest3
 qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR,fe
 xttest3 //roda o teste de wald para detecção de heterocedasticidade.
-*Comentários: As hipóteses H0 de ausência de autocorrelação e ausência de heterocedasticidade foram rejeitadas a um nível de significância de 5%. Portanto temos problema de autocorrelação e heterocedasticidade. Neste caso recomenda-se rodar o modelo utilizando o método robust ou bootstrap.
+*Comentários: As hipóteses H0 de ausência de autocorrelação e ausência de heterocedasticidade
+* foram rejeitadas a um nível de significância de 5%. Portanto temos problema de autocorrelação e heterocedasticidade. 
+*Neste caso recomenda-se rodar o modelo utilizando o método robust ou bootstrap.
 
 **********************************************************************************************************
 **********************************************************************************************************
@@ -214,14 +216,15 @@ xttest0
 
 ********TESTE DE CHOW: POOLED X EFEITO FIXO; H0: POOLED, H1: EFEITO FIXO ***********************************
 xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, fe
-*Comentário teórico: Olha-se o valor de Prob > F = 0.05 na regressão. Se 0 < Prob F < 0.05, rejeita-se H0, ou seja o modelo de Efeito Fixo é melhor. Caso contrário não rejeita-se H1, ou seja Pooled é melhor.
+*Comentário teórico: Verifica-se o valor de Prob > F = 0.05 na regressão. Se 0 < Prob F < 0.05, rejeita-se H0, ou seja o modelo de Efeito Fixo é melhor. 
+*Caso contrário não rejeita-se H1, ou seja Pooled é melhor.
 *Comentário do resultado: Neste caso o modelo de efeito fixo mostrou-se mais adequado que o modelo pooled. 
 * Após Teste de Breusch-Pagan e Chow, descarta-se o modelo pooled.
 
 ********TESTE DE HAUSMAN: POOLED X EFEITO FIXO X EFEITO ALEATÓRIO; H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO ***********
-qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, fe
+qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, fe 
 estimates store fe
-qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, re
+qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, re 
 estimates store re
 
 hausman fe re, sigmamore
@@ -230,8 +233,32 @@ hausman fe re, sigmaless
 *Assim, tem-se a escolha pelo Efeito ALEATÓRIO (H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO)
 
 *************************************** MODELOS DE REGRESSÃO ************************************************
-xtreg LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, fe vce(robust)
+xtreg LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg_Nreg, fe vce(robust)
 
-xtreg LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, re vce(robust)
 
+xtreg LegNEMedio LegCPCMedio , fe vce(robust)
+
+xtreg LegNEMedio LegCPCMedio , re vce(robust)
+
+** capit e adr escolher uma ou outra pois estas estão correlacionados teoricamente e desse modo
+** teremos problemas de multicolineariedade
+
+** melhor composição de modelo 
+xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX , fe vce(robust)
+
+xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX idsetor1-idsetor9, re rob
+** podemos perceber que ao insirir o setor não temos ganho significativo 
+
+
+**xtreg LegNEMedio LegCPCMedio WsqEXT RevCPC CAPIT wlTAM, fe vce(robust)
+
+
+RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg_Nreg
+** Adicionando o setor ***
+encode SETOR, generate (idsetor) label (SETOR)
+tabulate (idsetor), gen(idsetor)
+
+xtreg LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR idsetor1-idsetor9, re rob
+
+xtreg LegNEMedio LegCPCMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR, fe rob
 
