@@ -173,8 +173,9 @@ swilk  LegNEMedio cLegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk
 * Foi retirado as variáveis binárias 
 
-
+** referencia interessante para o teste de curtose e assimetria
 *** https://www.researchgate.net/publication/314032599_TO_DETERMINE_SKEWNESS_MEAN_AND_DEVIATION_WITH_A_NEW_APPROACH_ON_CONTINUOUS_DATA
+
 
 sktest LegNEMedio cLegCPCMedio wlTAM COMPLEX CAPIT WsqEXT, noadjust
 * Comentário teórico: teste de assimetria e curtose
@@ -244,11 +245,10 @@ xtreg LegNEMedio LegCPCMedio , re vce(robust)
 ** teremos problemas de multicolineariedade
 
 ** melhor composição de modelo 
-xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX , fe vce(robust)
+xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX Reg_Nreg , fe vce(robust)
 
 xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX idsetor1-idsetor9, re rob
 ** podemos perceber que ao insirir o setor não temos ganho significativo 
-
 
 **xtreg LegNEMedio LegCPCMedio WsqEXT RevCPC CAPIT wlTAM, fe vce(robust)
 
