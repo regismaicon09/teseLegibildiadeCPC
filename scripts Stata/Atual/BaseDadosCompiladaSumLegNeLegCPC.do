@@ -3,7 +3,7 @@
 
 clear
 set more off
-use "C:\Users\Regis\Documents\GitHub\teseLegibildiadeCPC\scripts Stata\Atual\BaseDadosCompiladaSumLegNeLegCPC.dta"
+use "C:\Users\Regis\Documents\GitHub\teseLegibildiadeCPC\scripts Stata\Atual\BaseDadosCompiladaSumLegNeLegCPCRevGui.dta"
 
 keep if LegNE !=. | ADR !=. | LegCPC !=. | RevCPC !=. | CAPIT !=. | COMPLEX !=. //manter somente os anos com valores em pelo menos uma variável (são excluidas as linhas que não apresenlnrl valores para as variáveis)
 encode NOME, generate (idempresa) label (NOME) //cria a variável que será utilizada como o indivíduo do painel, transformando-a de string para categórica.
@@ -244,9 +244,9 @@ xtreg LegNEMedio LegCPCMedio , re vce(robust)
 ** teremos problemas de multicolineariedade
 
 ** melhor composição de modelo 
-xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX Reg_Nreg , fe vce(robust)
+xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX Reg_Nreg ADR , re vce(robust)
 
-xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX idsetor1-idsetor9, re rob
+xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX Reg_Nreg ADR idsetor1-idsetor9, re rob
 ** podemos perceber que ao insirir o setor não temos ganho significativo 
 
 **xtreg LegNEMedio LegCPCMedio WsqEXT RevCPC CAPIT wlTAM, fe vce(robust)
