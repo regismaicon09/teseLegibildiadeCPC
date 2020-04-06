@@ -3,7 +3,7 @@
 
 clear
 set more off
-use "C:\Users\Regis\Documents\GitHub\teseLegibildiadeCPC\scripts Stata\Atual\BaseDadosCompiladaSumLegNeLegCPCRevGui.dta"
+use "C:\Users\Regis\Documents\GitHub\teseLegibildiadeCPC\scripts Stata\Atual\BaseDadosCompiladaSumLegNeLegCPCRevGui2.dta"
 
 keep if LegNE !=. | ADR !=. | LegCPC !=. | RevCPC !=. | CAPIT !=. | COMPLEX !=. //manter somente os anos com valores em pelo menos uma variável (são excluidas as linhas que não apresenlnrl valores para as variáveis)
 encode NOME, generate (idempresa) label (NOME) //cria a variável que será utilizada como o indivíduo do painel, transformando-a de string para categórica.
@@ -23,11 +23,11 @@ codebook //mostra o dicionário das variáveis da base de dados que está sendo uti
 ****Visualizar normalidade das variáveis escalares
 ********LegNEsumpeso********
 
-histogram LegNEMedio, norm 
-kdensity LegNEMedio, norm 
+*histogram LegNEMedio, norm 
+*kdensity LegNEMedio, norm 
 *1)Tratando a normalidade da variável LegNE
-ladder LegNEMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder LegNEMedio //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
+ladder LegNESumPesoMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
+*gladder LegNEMedio //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
 ** a tecnica para tratar os outliers deixou o modelo pior por isso não sera utilizada
 
 *search winsorize, all
@@ -35,18 +35,18 @@ gladder LegNEMedio //demonstra em gráficos qual seria a melhor maneira de corrig
 ********LegCPCSUMpeso********
 // não faria sentido o cálculo de normalidade pois é valor fixo
  
-histogram LegCPCMedio, norm 
-kdensity LegCPCMedio, norm 
+*histogram LegCPCMedio, norm 
+*kdensity LegCPCMedio, norm 
 *1)Tratando a normalidade da variável LegNE
-ladder LegCPCMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder LegCPCMedio //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
+ladder LegCPCSumPesoMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
+gladder LegCPCSumPesoMedio //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
 
-gen cLegCPCMedio = 1/(LegCPCMedio^3) 
-histogram cLegCPCMedio, norm 
-kdensity cLegCPCMedio, norm 
+gen cLegCPCSumPesoMedio = 1/(LegCPCSumPesoMedio^3) 
+*histogram cLegCPCMedio, norm 
+*kdensity cLegCPCMedio, norm 
 
 *2)winsorização (técnica para tratar os outliers).
-graph box cLegCPCMedio //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+*graph box cLegCPCMedio //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
 ** a tecnica de winsorização não apresentou melhoras significativa
 
 
@@ -54,91 +54,91 @@ graph box cLegCPCMedio //muitos outliers *Comentário teórico: O boxplot mostra o
 // variável binária não faz sentido ( podemos chamar de variaveis de controle )
 
 ********TAM********
-histogram TAM, norm 
-kdensity TAM, norm 
+*histogram TAM, norm 
+*kdensity TAM, norm 
 *1)Tratando a normalidade da variável end
 ladder TAM //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
 gladder TAM //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar log
 gen lTAM = log(TAM)
-histogram lTAM, norm 
+*histogram lTAM, norm 
 
 *2)winsorização (técnica para tratar os outliers).
-graph box lTAM //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+*graph box lTAM //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
 winsor lTAM, gen(wlTAM) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box wlTAM
-histogram wlTAM, norm 
-kdensity wlTAM, norm
+*graph box wlTAM
+*histogram wlTAM, norm 
+*kdensity wlTAM, norm
 ** nesse caso vejo que utilizar winsorização não foi tão interessante
 
-swilk  lTAM wlTAM
-sfrancia lTAM wlTAM
-wlTAM
+*swilk  lTAM wlTAM
+*sfrancia lTAM wlTAM
+*wlTAM
 
 ********COMPLEX********
-histogram COMPLEX, norm 
-kdensity COMPLEX, norm 
+*histogram COMPLEX, norm 
+*kdensity COMPLEX, norm 
 *1)Tratando a normalidade da variável end
 ladder COMPLEX //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
 gladder COMPLEX //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar COMPLEX^2  
 gen sCOMPLEX = COMPLEX^2
-histogram sCOMPLEX, norm 
+*histogram sCOMPLEX, norm 
 
 
 *2)winsorização (técnica para tratar os outliers).
-graph box sCOMPLEX //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+*graph box sCOMPLEX //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
 winsor sCOMPLEX, gen(wsCOMPLEX) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box wsCOMPLEX
-histogram wsCOMPLEX, norm 
-kdensity wsCOMPLEX, norm
+*graph box wsCOMPLEX
+*histogram wsCOMPLEX, norm 
+*kdensity wsCOMPLEX, norm
 
 
-swilk  COMPLEX sCOMPLEX wsCOMPLEX
-sfrancia  COMPLEX sCOMPLEX wsCOMPLEX
-COMPLEX
+*swilk  COMPLEX sCOMPLEX wsCOMPLEX
+*sfrancia  COMPLEX sCOMPLEX wsCOMPLEX
+*COMPLEX
 ** Chegou a conclusão que é melhor utilizar sem fazer ajustes
 
 ********CAPIT********
-histogram CAPIT, norm 
-kdensity CAPIT, norm 
+*histogram CAPIT, norm 
+*kdensity CAPIT, norm 
 *1)Tratando a normalidade da variável end
 ladder CAPIT //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder CAPIT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(CAPIT)  
+*gladder CAPIT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(CAPIT)  
 gen sqCAPIT = sqrt(CAPIT) 
-histogram sqCAPIT, norm 
+*histogram sqCAPIT, norm 
 
 *2)winsorização (técnica para tratar os outliers).
-graph box sqCAPIT //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+*graph box sqCAPIT //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
 winsor sqCAPIT, gen(wsqCAPIT) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box wsqCAPIT
-histogram wsqCAPIT, norm 
-kdensity wsqCAPIT, norm
+*graph box wsqCAPIT
+*histogram wsqCAPIT, norm 
+*kdensity wsqCAPIT, norm
 
-swilk  CAPIT sqCAPIT wsqCAPIT
-sfrancia  CAPIT sqCAPIT wsqCAPIT
-CAPIT
+*swilk  CAPIT sqCAPIT wsqCAPIT
+*sfrancia  CAPIT sqCAPIT wsqCAPIT
+*CAPIT
 
 ** seria interessante explorar mais essa variável
 
 ********EXT********
-histogram EXT, norm 
-kdensity EXT, norm 
+*histogram EXT, norm 
+*kdensity EXT, norm 
 
 *1)Tratando a normalidade da variável end
 ladder EXT //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
 gladder EXT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(sqrt(EXT))  
 gen sqEXT = sqrt(EXT) 
-histogram sqEXT, norm 
+*histogram sqEXT, norm 
 
 *2)winsorização (técnica para tratar os outliers).
-graph box sqEXT //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+*graph box sqEXT //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
 winsor sqEXT, gen(WsqEXT) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
-graph box WsqEXT
-histogram WsqEXT, norm 
-kdensity WsqEXT, norm
+*graph box WsqEXT
+*histogram WsqEXT, norm 
+*kdensity WsqEXT, norm
 
-swilk  EXT sqEXT WsqEXT
-sfrancia  EXT sqEXT WsqEXT
-WsqEXT
+*swilk  EXT sqEXT WsqEXT
+*sfrancia  EXT sqEXT WsqEXT
+*WsqEXT
 
 
 *tabstat LegNEsumpeso LegCPCSUMpeso srLegCPCSUMpeso RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR, s(count min max mean sd cv sk p1 p5 p10 p25 p50 p75 p90 p95 p99)
@@ -149,26 +149,26 @@ WsqEXT
 
 *summ LegNEsumpeso LegCPCSUMpeso srLegCPCSUMpeso RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR
 
-sum LegNEMedio LegCPCMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR 
+sum LegNESumPesoMedio LegCPCSumPesoMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR 
 *descritiva
 
 
-sum LegNEMedio LegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
+sum LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT
 * Comentário teórico: tabelas com descrições estatísticas 
 
 ****** Teste de Normalidade ***** 
 ** sem transformacao
 
-sfrancia  LegNEMedio LegCPCMedio TAM COMPLEX CAPIT EXT
+sfrancia  LegNESumPesoMedio LegCPCSumPesoMedio TAM COMPLEX CAPIT EXT
 
-sfrancia  LegNEMedio cLegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
+sfrancia  LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT
  
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk para grandes amostras
 * Foi retirado as variáveis binárias 
 
-swilk LegNEMedio LegCPCMedio TAM COMPLEX CAPIT EXT
+swilk LegNESumPesoMedio LegCPCSumPesoMedio TAM COMPLEX CAPIT EXT
 
-swilk  LegNEMedio cLegCPCMedio wlTAM COMPLEX CAPIT WsqEXT 
+swilk  LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT 
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk
 * Foi retirado as variáveis binárias 
 
@@ -176,11 +176,11 @@ swilk  LegNEMedio cLegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
 *** https://www.researchgate.net/publication/314032599_TO_DETERMINE_SKEWNESS_MEAN_AND_DEVIATION_WITH_A_NEW_APPROACH_ON_CONTINUOUS_DATA
 
 
-sktest LegNEMedio cLegCPCMedio wlTAM COMPLEX CAPIT WsqEXT, noadjust
+sktest LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT, noadjust
 * Comentário teórico: teste de assimetria e curtose
 * Comentário teórico: Pelos valores dos dois testes pode-se verificar que os termos de erro não apresenlnrl distribuição normal ao nível de significância de 5%, podendo rejeitar a hipótese nula de que os dados possuem distribuição normal.
 
-pwcorr  LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, star(0.05) //verifica a correlação (força da associação entre as variáveis) e  ajuda a verificar se há problemas de multicolinearidade (altas correlações)
+pwcorr  LegNESumPesoMedio LegCPCSumPesoMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, star(0.05) //verifica a correlação (força da associação entre as variáveis) e  ajuda a verificar se há problemas de multicolinearidade (altas correlações)
 
 qui reg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR
 vif
@@ -233,18 +233,18 @@ hausman fe re, sigmaless
 *Assim, tem-se a escolha pelo Efeito ALEATÓRIO (H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO)
 
 *************************************** MODELOS DE REGRESSÃO ************************************************
-xtreg LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg_Nreg, fe vce(robust)
-
-
-xtreg LegNEMedio LegCPCMedio , fe vce(robust)
-
-xtreg LegNEMedio LegCPCMedio , re vce(robust)
-
+xtreg LegNESumPesoMedio LegCPCSumPesoMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg_Nreg, fe vce(robust)
+** modelo não apresente p value significante
 ** capit e adr escolher uma ou outra pois estas estão correlacionados teoricamente e desse modo
 ** teremos problemas de multicolineariedade
 
-** melhor composição de modelo 
-xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX Reg_Nreg ADR , re vce(robust)
+
+** melhor composição de modelo para a analise
+** ADR e RegNreg
+xtreg LegNESumPesoMedio LegCPCSumPesoMedio CAPIT RevCPC COMPLEX Reg_Nreg ADR wlTAM , re vce(robust)
+
+pwcorr  LegNESumPesoMedio LegCPCSumPesoMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, star(0.05)
+
 
 xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX Reg_Nreg ADR idsetor1-idsetor9, re rob
 ** podemos perceber que ao insirir o setor não temos ganho significativo 
