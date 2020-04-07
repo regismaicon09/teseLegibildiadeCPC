@@ -26,7 +26,7 @@ codebook //mostra o dicionário das variáveis da base de dados que está sendo uti
 *histogram LegNEMedio, norm 
 *kdensity LegNEMedio, norm 
 *1)Tratando a normalidade da variável LegNE
-ladder LegNESumPesoMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
+ladder LegNESumMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
 *gladder LegNEMedio //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
 ** a tecnica para tratar os outliers deixou o modelo pior por isso não sera utilizada
 
@@ -38,10 +38,10 @@ ladder LegNESumPesoMedio //traz as diversas alternativas para transformação da v
 *histogram LegCPCMedio, norm 
 *kdensity LegCPCMedio, norm 
 *1)Tratando a normalidade da variável LegNE
-ladder LegCPCSumPesoMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
+ladder LegCPCSumMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
 gladder LegCPCSumPesoMedio //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
 
-gen cLegCPCSumPesoMedio = 1/(LegCPCSumPesoMedio^3) 
+gen cLegCPCSumMedio = 1/(LegCPCSumMedio^3) 
 *histogram cLegCPCMedio, norm 
 *kdensity cLegCPCMedio, norm 
 
@@ -149,26 +149,26 @@ winsor sqEXT, gen(WsqEXT) p(0.05) //não tem mais outlier (inicia-se o teste com 
 
 *summ LegNEsumpeso LegCPCSUMpeso srLegCPCSUMpeso RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR
 
-sum LegNESumPesoMedio LegCPCSumPesoMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR 
+sum LegNESumMedio LegCPCSumMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR 
 *descritiva
 
 
-sum LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT
+sum LegNESumMedio LegCPCSumMedio wlTAM COMPLEX CAPIT WsqEXT
 * Comentário teórico: tabelas com descrições estatísticas 
 
 ****** Teste de Normalidade ***** 
 ** sem transformacao
 
-sfrancia  LegNESumPesoMedio LegCPCSumPesoMedio TAM COMPLEX CAPIT EXT
+sfrancia  LegNESumMedio LegCPCSumMedio TAM COMPLEX CAPIT EXT
 
-sfrancia  LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT
+sfrancia  LegNESumMedio LegCPCSumMedio wlTAM COMPLEX CAPIT WsqEXT
  
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk para grandes amostras
 * Foi retirado as variáveis binárias 
 
-swilk LegNESumPesoMedio LegCPCSumPesoMedio TAM COMPLEX CAPIT EXT
+swilk LegNESumMedio LegCPCSumMedio TAM COMPLEX CAPIT EXT
 
-swilk  LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT 
+swilk  LegNESumMedio LegCPCSumMedio wlTAM COMPLEX CAPIT WsqEXT 
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk
 * Foi retirado as variáveis binárias 
 
@@ -176,13 +176,13 @@ swilk  LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT
 *** https://www.researchgate.net/publication/314032599_TO_DETERMINE_SKEWNESS_MEAN_AND_DEVIATION_WITH_A_NEW_APPROACH_ON_CONTINUOUS_DATA
 
 
-sktest LegNESumPesoMedio LegCPCSumPesoMedio wlTAM COMPLEX CAPIT WsqEXT, noadjust
+sktest LegNESumMedio LegCPCSumMedio wlTAM COMPLEX CAPIT WsqEXT, noadjust
 * Comentário teórico: teste de assimetria e curtose
 * Comentário teórico: Pelos valores dos dois testes pode-se verificar que os termos de erro não apresenlnrl distribuição normal ao nível de significância de 5%, podendo rejeitar a hipótese nula de que os dados possuem distribuição normal.
 
-pwcorr  LegNESumPesoMedio LegCPCSumPesoMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, star(0.05) //verifica a correlação (força da associação entre as variáveis) e  ajuda a verificar se há problemas de multicolinearidade (altas correlações)
+pwcorr  LegNESumMedio LegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, star(0.05) //verifica a correlação (força da associação entre as variáveis) e  ajuda a verificar se há problemas de multicolinearidade (altas correlações)
 
-qui reg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR
+qui reg LegNESumMedio cLegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR
 vif
 *Comentário teórico: Cada variável não pode apresentar um valor de VIF individualmente maior que 10 e o VIF médio do modelo lnrlbém não pode ser maior que 10 (HAIR JR. ET AL, 2009). A variável que está causando o problema deve ser retirada do modelo de regressão.
 *Comentário do resultado: Neste caso não há problemas de multicolinearidade entre as variáveis. Portanto nenhuma das variáveis deve retirada do modelo.
@@ -190,10 +190,10 @@ vif
 **********TESTE PARA VERIFICAR SE EXISTE PROBLEMA DE AUTOCORRELAÇÃO: H0: não há autocorrelação; H1: há autocorrelação***********
 ***TESTE PARA VERIFICAR SE EXISTE PROBLEMA DE HETEROCEDASTICIDADE: H0: não há heterocedasticidade; H1: há heterocedasticidade***
 findit xtserial //este comando irá instalar o teste de woodridge de autocorrelação. Em seguida clicar em "st0039" e depois "click here to install"
-xtserial LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, output //roda o teste de woodridge de autocorrelação. 
+xtserial LegNESumMedio cLegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, output //roda o teste de woodridge de autocorrelação. 
 
 findit xttest3
-qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR,fe
+qui xtreg LegNESumMedio cLegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR,fe
 xttest3 //roda o teste de wald para detecção de heterocedasticidade.
 *Comentários: As hipóteses H0 de ausência de autocorrelação e ausência de heterocedasticidade
 * foram rejeitadas a um nível de significância de 5%. Portanto temos problema de autocorrelação e heterocedasticidade. 
@@ -210,21 +210,21 @@ xttest3 //roda o teste de wald para detecção de heterocedasticidade.
 **********************************************************************************************************
 
 ********TESTE DE BREUSCH-PAGAN: POOL X EFEITO ALEATÓRIO; H0: POOL, H1: EFEITO ALEATÓRIO *******************
-qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, re
+qui xtreg LegNESumMedio cLegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, re
 xttest0
 *Comentário: Rejeitou-se a menos de 1% a hipótese H0: Pooled. Portanto, o modelo estimado por efeitos aleatórios mostrou-se mais adequado que que o modelo pooled.
 
 ********TESTE DE CHOW: POOLED X EFEITO FIXO; H0: POOLED, H1: EFEITO FIXO ***********************************
-xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, fe
+xtreg LegNESumMedio cLegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, fe
 *Comentário teórico: Verifica-se o valor de Prob > F = 0.05 na regressão. Se 0 < Prob F < 0.05, rejeita-se H0, ou seja o modelo de Efeito Fixo é melhor. 
 *Caso contrário não rejeita-se H1, ou seja Pooled é melhor.
 *Comentário do resultado: Neste caso o modelo de efeito fixo mostrou-se mais adequado que o modelo pooled. 
 * Após Teste de Breusch-Pagan e Chow, descarta-se o modelo pooled.
 
 ********TESTE DE HAUSMAN: POOLED X EFEITO FIXO X EFEITO ALEATÓRIO; H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO ***********
-qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, fe 
+qui xtreg LegNESumMedio cLegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, fe 
 estimates store fe
-qui xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, re 
+qui xtreg LegNESumMedio cLegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, re 
 estimates store re
 
 hausman fe re, sigmamore
@@ -233,20 +233,23 @@ hausman fe re, sigmaless
 *Assim, tem-se a escolha pelo Efeito ALEATÓRIO (H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO)
 
 *************************************** MODELOS DE REGRESSÃO ************************************************
-xtreg LegNESumPesoMedio LegCPCSumPesoMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg_Nreg, fe vce(robust)
+xtreg LegNESumMedio LegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg_Nreg, fe vce(robust)
 ** modelo não apresente p value significante
 ** capit e adr escolher uma ou outra pois estas estão correlacionados teoricamente e desse modo
 ** teremos problemas de multicolineariedade
 
 
+************************************************************************************************
+
 ** melhor composição de modelo para a analise
 ** ADR e RegNreg
-xtreg LegNESumPesoMedio LegCPCSumPesoMedio CAPIT RevCPC COMPLEX Reg_Nreg ADR wlTAM , re vce(robust)
+xtreg LegNESumMedio LegCPCSumMedio CAPIT RevCPC COMPLEX Reg_Nreg ADR wlTAM , re vce(robust)
 
-pwcorr  LegNESumPesoMedio LegCPCSumPesoMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, star(0.05)
+************************************************************************************************
+pwcorr  LegNESumMedio LegCPCSumMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, star(0.05)
 
 
-xtreg LegNEMedio LegCPCMedio CAPIT COMPLEX Reg_Nreg ADR idsetor1-idsetor9, re rob
+xtreg LegNESumMedio cLegCPCSumMedio CAPIT COMPLEX Reg_Nreg ADR idsetor1-idsetor9, re rob
 ** podemos perceber que ao insirir o setor não temos ganho significativo 
 
 **xtreg LegNEMedio LegCPCMedio WsqEXT RevCPC CAPIT wlTAM, fe vce(robust)
@@ -257,7 +260,7 @@ RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg_Nreg
 encode SETOR, generate (idsetor) label (SETOR)
 tabulate (idsetor), gen(idsetor)
 
-xtreg LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR idsetor1-idsetor9, re rob
+xtreg LegNESumMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR idsetor1-idsetor9, re rob
 
-xtreg LegNEMedio LegCPCMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR, fe rob
+xtreg LegNESumMedio LegCPCMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR, fe rob
 
