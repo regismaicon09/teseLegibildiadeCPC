@@ -2,7 +2,7 @@
 *************************************************************** ABRIR O ARQUIVO *********************************************************************
 
 clear
-use "C:\Users\Regis\Documents\GitHub\teseLegibildiadeCPC\scripts Stata\Atual\Diff Media\2010.dta"
+use "C:\Users\Regis\Documents\GitHub\teseLegibildiadeCPC\scripts Stata\Atual\Diff Media\2012.dta"
 ladder LegNEMedio //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
 gladder LegNEMedio //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados --> manter a variável
 ** a tecnica para tratar os outliers deixou o modelo pior por isso não sera utilizada
@@ -21,21 +21,20 @@ ttest LegNEMedio, by(GC)
 ttest sLegNEMedio, by(GC)
 
 ****** Resultados ***** 
-Pr(|T| > |t|) = 0.2418 
-Pr(|T| > |t|) = 0.2594
+*Pr(|T| > |t|) = 0.7439 
 *Não há diferença de média significante entre os grupos
 
 ttest LegNEMedio, by(GC)
 
 ttest LegNEMedio, by(Reg_Nreg) 
-*** Pr(|T| > |t|) = 0.3265  
+***  Pr(|T| > |t|) = 0.1063  
 
 ttest sLegNEMedio, by(Reg_Nreg) 
-*** Pr(|T| > |t|) = 0.3311 
+*** Pr(|T| > |t|) = 0.1506 
 
 
 ttest sLegNEMedio, by(ADR) 
-*** Pr(|T| > |t|) = 0.3311 
+***  Pr(|T| > |t|) = 0.2212 
 
 
 
