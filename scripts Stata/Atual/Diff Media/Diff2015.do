@@ -30,7 +30,6 @@ ttest LegNEMedio, by(Reg_Nreg)
 *** Pr(|T| > |t|) = 0.0510 
 
 
-
 ttest sLegNEMedio, by(Reg_Nreg) 
 ***  Pr(|T| > |t|) = 0.0560  
 

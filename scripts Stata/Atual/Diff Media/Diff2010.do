@@ -30,13 +30,9 @@ ttest LegNEMedio, by(GC)
 ttest LegNEMedio, by(Reg_Nreg) 
 *** Pr(|T| > |t|) = 0.3265  
 
-ttest sLegNEMedio, by(Reg_Nreg) 
+ttest LegNEMedio, by(Reg_Nreg) 
 *** Pr(|T| > |t|) = 0.3311 
 
-
-ttest sLegNEMedio, by(ADR) 
+ttest LegNEMedio, by(ADR) 
 *** Pr(|T| > |t|) = 0.3311 
-
-
-
 
