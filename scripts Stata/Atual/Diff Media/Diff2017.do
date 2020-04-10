@@ -21,7 +21,6 @@ ttest LegNEMedio, by(GC)
 ttest sLegNEMedio, by(GC)
 
 ****** Resultados ***** 
-
 * Pr(|T| > |t|) = 0.9836 
 
 *Não há diferença de média significante entre os grupos
@@ -31,10 +30,6 @@ ttest LegNEMedio, by(GC)
 
 ttest LegNEMedio, by(Reg_Nreg) 
 *** Pr(|T| > |t|) = 0.1545   
-
-ttest sLegNEMedio, by(Reg_Nreg) 
-***   Pr(|T| > |t|) = 0.1825 
-
 
 ttest LegNEMedio, by(ADR) 
 *** Pr(|T| > |t|) = 0.4628  

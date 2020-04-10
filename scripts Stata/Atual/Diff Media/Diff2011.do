@@ -18,21 +18,11 @@ sktest sLegNEMedio
 *ranksum LegNEMedio, by(GC)
 
 ttest LegNEMedio, by(GC)
-ttest sLegNEMedio, by(GC)
-
-****** Resultados ***** 
-*Pr(|T| > |t|) = 0.4430   
-*Não há diferença de média significante entre os grupos
-
 
 ttest LegNEMedio, by(Reg_Nreg) 
 ***  Pr(|T| > |t|) = 0.3456   
 
-ttest sLegNEMedio, by(Reg_Nreg) 
-*** Pr(|T| > |t|) = 0.4036  
-
-
-ttest sLegNEMedio, by(ADR) 
+ttest LegNEMedio, by(ADR) 
 *** Pr(|T| > |t|) = 0.8069
 
 

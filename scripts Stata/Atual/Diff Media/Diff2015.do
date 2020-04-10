@@ -17,11 +17,6 @@ sktest sLegNEMedio
 ** Visto que dos dados possuem um distribuição normal podemos rodar os testes paramêtricos de diferença de média
 *ranksum LegNEMedio, by(GC)
 
-ttest LegNEMedio, by(GC)
-ttest sLegNEMedio, by(GC)
-
-****** Resultados ***** 
-*Não há diferença de média significante entre os grupos
 
 ttest LegNEMedio, by(GC)
 ** Pr(|T| > |t|) = 0.6965   
@@ -30,10 +25,7 @@ ttest LegNEMedio, by(Reg_Nreg)
 *** Pr(|T| > |t|) = 0.0510 
 
 
-ttest sLegNEMedio, by(Reg_Nreg) 
-***  Pr(|T| > |t|) = 0.0560  
-
-ttest sLegNEMedio, by(ADR) 
+ttest LegNEMedio, by(ADR) 
 *** Pr(|T| > |t|) = 0.1026 
 
 
