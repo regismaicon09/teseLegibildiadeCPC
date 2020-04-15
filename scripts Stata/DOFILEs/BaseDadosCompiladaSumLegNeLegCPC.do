@@ -245,17 +245,25 @@ xtreg LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg_
 ** Melhor composição de modelo para a analise
 ** ADR e RegNreg
 
-xtreg LegNEMedio LegCPCMedio CAPIT RevCPC COMPLEX Reg_Nreg ADR wlTAM, fe vce(robust)
+xtreg LegNEMedio LegCPCMedio wsqCAPIT RevCPC COMPLEX Reg_Nreg ADR wlTAM, re vce(robust)
+
+
+pwcorr  LegNEMedio LegCPCMedio wlTAM wsqCAPIT wsCOMPLEX WsqEXT RevCPC Reg_Nreg GC AUDIT ADR , star(0.05) //v
 
 
 
 
-xtreg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg AUDIT, re vce(robust)
+xtreg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT, re vce(robust)
+
+
+xtreg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT idsetor1-idsetor9, re rob
+
+
+
 ** nesse modelo foram incluídas as variavies transformadas que fizerem o modelo melhorar o p value
 
 
-
-xtreg LegNEMedio LegCPCMedio wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR, re vce(robust)
+xtreg LegNEMedio LegCPCMedio wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR EXT, re vce(robust)
 *** Como explicar essa relação 
 **CAPIT(p-value 0.033 **p<0.05)
 **ADR(p-value 0.069 *p<0.1)
@@ -273,8 +281,11 @@ xtreg LegNEMedio LegCPCMedio wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR, re vc
 
 **RevCPC** tem-se um efeito negativo e não significativo sobre o indice de legibilidade da nota explicativa
 
+**Reg_Nreg** tem-se um efeito negativo e não significativo sobre o indice de legibilidade da nota explicativa
 
 
+
+ 
 ************************************************************************************************
 pwcorr  LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR, star(0.05)
 

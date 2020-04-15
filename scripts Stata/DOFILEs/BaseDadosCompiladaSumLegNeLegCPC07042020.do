@@ -203,6 +203,6 @@ xtreg LegNEMedio cLegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT WsqEXT ADR Reg
 ************************************************************************************************
 
 ** Melhor composição de modelo para a analise
-xtreg LegNEMedio LegCPCMedio CAPIT RevCPC COMPLEX Reg_Nreg ADR wlTAM , re vce(robust)
+xtreg LegNEMedio LegCPCMedio  COMPLEX CAPIT ADR , re vce(robust)
 
 ************************************************************************************************
