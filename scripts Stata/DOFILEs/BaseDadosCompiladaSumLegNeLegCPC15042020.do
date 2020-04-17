@@ -186,7 +186,7 @@ sktest LegNEMedio LegCPCMedio wlTAM COMPLEX CAPIT WsqEXT, noadjust
 
 pwcorr  LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT EXT ADR, star(0.05) //verifica a correlação (força da associação entre as variáveis) e  ajuda a verificar se há problemas de multicolinearidade (altas correlações)
 
-qui reg LegNEMedio LegCPCMedio RevCPC wlTAM COMPLEX CAPIT GC AUDIT EXT ADR
+qui reg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT GC	AUDIT
 vif
 *Comentário teórico: Cada variável não pode apresentar um valor de VIF individualmente maior que 10 e o VIF médio do modelo lnrlbém não pode ser maior que 10 (HAIR JR. ET AL, 2009). A variável que está causando o problema deve ser retirada do modelo de regressão.
 *Comentário do resultado: Neste caso não há problemas de multicolinearidade entre as variáveis. Portanto nenhuma das variáveis deve retirada do modelo.
@@ -208,7 +208,11 @@ xttest3 //roda o teste de wald para detecção de heterocedasticidade.
 
 
 
-pwcorr  LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT GC	AUDIT  WsqEXT , star(0.05)
+pwcorr  LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT GC	AUDIT   , star(0.05)
+
+
+
+pwcorr LegNEMedio LegCPCMedio  wlTAM wsCOMPLEX wsqCAPIT  WsqEXT, star(0.05)
 
 
 
