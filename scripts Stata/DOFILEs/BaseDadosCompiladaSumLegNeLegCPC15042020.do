@@ -52,17 +52,13 @@ gen cLegCPCMedio = 1/(LegCPCMedio^3)
 *graph box cLegCPCMedio //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
 ** a tecnica de winsorização não apresentou melhoras significativa
 
-
-********RevCPC********
-// variável binária não faz sentido ( podemos chamar de variaveis de controle )
-
 ********TAM********
 *histogram TAM, norm 
 *kdensity TAM, norm 
 
 *1)Tratando a normalidade da variável end
 ladder TAM //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder TAM //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar log
+*gladder TAM //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar log
 gen lTAM = log(TAM)
 *histogram lTAM, norm 
 
@@ -74,41 +70,34 @@ winsor lTAM, gen(wlTAM) p(0.05) //não tem mais outlier (inicia-se o teste com p(
 *kdensity wlTAM, norm
 ** nesse caso vejo que utilizar winsorização não foi tão interessante
 
-*swilk  lTAM wlTAM
-*sfrancia lTAM wlTAM
-*wlTAM
-
 ********COMPLEX********
-*histogram COMPLEX, norm 
-*kdensity COMPLEX, norm 
+
 *1)Tratando a normalidade da variável end
 ladder COMPLEX //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder COMPLEX //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar COMPLEX^2  
+*gladder COMPLEX //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar COMPLEX^2  
 gen sCOMPLEX = COMPLEX^2
-*histogram sCOMPLEX, norm 
 
+histogram sCOMPLEX, norm 
 
 *2)winsorização (técnica para tratar os outliers).
-*graph box sCOMPLEX //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
+graph box sCOMPLEX //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
 winsor sCOMPLEX, gen(wsCOMPLEX) p(0.05) //não tem mais outlier (inicia-se o teste com p(0,05), aumentando de 0,05 em 0,05 até não ter mais outliers).
 *graph box wsCOMPLEX
 *histogram wsCOMPLEX, norm 
-*kdensity wsCOMPLEX, norm
 
 
-*swilk  COMPLEX sCOMPLEX wsCOMPLEX
-*sfrancia  COMPLEX sCOMPLEX wsCOMPLEX
 *COMPLEX
 ** Chegou a conclusão que é melhor utilizar sem fazer ajustes
+
 
 ********CAPIT********
 *histogram CAPIT, norm 
 *kdensity CAPIT, norm 
 *1)Tratando a normalidade da variável end
 ladder CAPIT //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-*gladder CAPIT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(CAPIT)  
+gladder CAPIT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(CAPIT)  
 gen sqCAPIT = sqrt(CAPIT) 
-*histogram sqCAPIT, norm 
+histogram sqCAPIT, norm 
 
 *2)winsorização (técnica para tratar os outliers).
 *graph box sqCAPIT //muitos outliers *Comentário teórico: O boxplot mostra os outliers.
@@ -117,19 +106,12 @@ winsor sqCAPIT, gen(wsqCAPIT) p(0.05) //não tem mais outlier (inicia-se o teste 
 *histogram wsqCAPIT, norm 
 *kdensity wsqCAPIT, norm
 
-*swilk  CAPIT sqCAPIT wsqCAPIT
-*sfrancia  CAPIT sqCAPIT wsqCAPIT
-*CAPIT
 
-** seria interessante explorar mais essa variável
 
-********EXT********
-*histogram EXT, norm 
-*kdensity EXT, norm 
 
 *1)Tratando a normalidade da variável end
 ladder EXT //traz as diversas alternativas para transformação da variável --> pega a de menor qui2
-gladder EXT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(sqrt(EXT))  
+*gladder EXT //demonstra em gráficos qual seria a melhor maneira de corrigir a normalidade dos dados -->transformar  sqrt(sqrt(EXT))  
 gen sqEXT = sqrt(EXT) 
 *histogram sqEXT, norm 
 
@@ -153,11 +135,12 @@ graph box WsqEXT
 
 *summ LegNEsumpeso LegCPCSUMpeso srLegCPCSUMpeso RevCPC TAM wlTAM COMPLEX sCOMPLEX CAPIT wsqCAPIT GC AUDIT EXT ADR
 
-sum LegNEMedio LegCPCMedio RevCPC lTAM COMPLEX CAPIT GC AUDIT EXT ADR 
+sum LegNEMedio LegCPCMedio RevCPC TAM COMPLEX CAPIT GC AUDIT EXT ADR 
 *descritiva
 
 
-sum LegNEMedio LegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
+sum LegNEMedio LegCPCMedio wlTAM wsCOMPLEX sqCAPIT  WsqEXT
+
 * Comentário teórico: tabelas com descrições estatísticas 
 
 ****** Teste de Normalidade ***** 
@@ -165,14 +148,21 @@ sum LegNEMedio LegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
 
 sfrancia  LegNEMedio LegCPCMedio TAM COMPLEX CAPIT EXT
 
-sfrancia  LegNEMedio LegCPCMedio wlTAM COMPLEX CAPIT WsqEXT
+sfrancia  LegNEMedio LegCPCMedio wlTAM wsCOMPLEX sqCAPIT  WsqEXT
+
+sfrancia  LegNEMedio LegCPCMedio wlTAM wsCOMPLEX wsqCAPIT  WsqEXT
  
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk para grandes amostras
 * Foi retirado as variáveis binárias 
 
-swilk LegNEMedio LegCPCMedio TAM COMPLEX CAPIT EXT
 
-swilk LegNEMedio LegCPCMedio wlTAM COMPLEX CAPIT WsqEXT 
+swilk  LegNEMedio LegCPCMedio TAM COMPLEX CAPIT EXT
+
+swilk  LegNEMedio LegCPCMedio wlTAM wsCOMPLEX sqCAPIT  WsqEXT
+
+swilk  LegNEMedio LegCPCMedio wlTAM wsCOMPLEX wsqCAPIT  WsqEXT
+
+
 * Comentário teórico: teste para a detecção de normalidade Shapiro-wilk
 * Foi retirado as variáveis binárias 
 
@@ -245,7 +235,7 @@ xtreg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEX
 
 ********TESTE DE HAUSMAN: POOLED X EFEITO FIXO X EFEITO ALEATÓRIO; H0: EFEITO ALEATÓRIO, H1: EFEITO FIXO ***********
 
-qui xtreg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT, fe 
+qui xtreg LegNEMedio LegCPCMedio wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT, fe 
 estimates store fe
 
 qui xtreg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT, re 
@@ -260,7 +250,8 @@ hausman fe re, sigmaless
 
 *************************************** MODELOS DE REGRESSÃO ************************************************
 ** Melhor composição de modelo para a analise
-xtreg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT, re vce(robust)
+xtreg LegNEMedio LegCPCMedio wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT, re vce(robust)
+
 
 ** Não foi significativo rodar por setor
 encode SETOR, generate (idsetor) label (SETOR)
