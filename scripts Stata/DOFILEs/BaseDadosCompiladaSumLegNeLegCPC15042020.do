@@ -22,6 +22,8 @@ xtset idempresa Ano //configura o painel mostrando para o Stata o que é para se 
 codebook //mostra o dicionário das variáveis da base de dados que está sendo utilizada. É preciso ir no browse e alimentar cada variável.
 
 
+
+
   ************************
 **TRAlnrlENTO DAS VARIÁVEIS**
   ************************
@@ -257,4 +259,20 @@ xtreg LegNEMedio LegCPCMedio wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT
 encode SETOR, generate (idsetor) label (SETOR)
 tabulate (idsetor), gen(idsetor)
 xtreg LegNEMedio LegCPCMedio  wlTAM wsqCAPIT wsCOMPLEX RevCPC Reg_Nreg ADR WsqEXT idsetor1-idsetor9, re rob
+
+
+
+*************************************** TESTE DE DIFEREBÇA DE MÉDIA  ************************************************
+
+
+
+oneway LegNEMedio COMPLEX
+oneway LegNEMedio CAPIT
+oneway LegNEMedio EXT
+
+
+
+graph box LegNEMedio, over(wsqCAPIT)
+
+oneway LegNEMedio EXT
 

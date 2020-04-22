@@ -28,4 +28,22 @@ ttest LegNEMedio, by(ADR)
 
 
 
+****** TESTE ANOVA ***** 
+*Não há diferença de média significante entre os grupos
 
+graph box LegNEMedio, over(COMPLEX)
+
+oneway LegNEMedio COMPLEX
+
+oneway LegNEMedio CAPIT
+
+oneway LegNEMedio EXT
+
+
+
+****** TESTE t ***** 
+*Não há diferença de média significante entre os grupos
+
+ttest LegNEMedio, by(CAPIT2)
+
+ttest LegNEMedio, by(EXT2)
