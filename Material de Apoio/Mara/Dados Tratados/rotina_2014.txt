@@ -1,0 +1,57 @@
+dp1 = read.csv("C:\\Users\\Douglas Oliveira\\Dropbox\\dataBOX\\PROJETOS\\Mara\\Dados Tratados\\dados_2014.csv", sep = ";", dec = ",")
+names(dp1)
+
+summary(dp1)
+
+hist(dp1[,7])
+hist(dp1[,8])
+hist(dp1[,9])
+hist(dp1[,10])
+hist(dp1[,11])
+hist(dp1[,12])
+hist(dp1[,17])
+hist(dp1[,18])
+hist(dp1[,19])
+hist(dp1[,20])
+
+##########################
+########## MOD 1 #########
+##########################
+
+mod1c = lm(dp1[,7] ~ dp1[,10] + dp1[,11] + dp1[,12] + dp1[,17] + dp1[,18] + dp1[,19] +
+dp1[,20] - 1, data = dp1)
+summary(mod1c)
+step(mod1c)
+
+mod1r = lm(dp1[,7] ~ dp1[,10] + dp1[,11] + dp1[,17] + dp1[,20] - 1, data = dp1)
+summary(mod1r)
+
+anova(mod1c,mod1r) # Lack of Fit
+
+##########################
+########## MOD 2 #########
+##########################
+
+mod2c = lm(dp1[,8] ~ dp1[,10] + dp1[,11] + dp1[,12] + dp1[,17] + dp1[,18] + dp1[,19] +
+dp1[,20] - 1, data = dp1)
+summary(mod2c)
+step(mod2c)
+
+mod2r = lm(dp1[,8] ~ dp1[,10] + dp1[,12] + dp1[,18] + dp1[,19] - 1, data = dp1)
+summary(mod2r)
+
+anova(mod2c,mod2r) # Lack of Fit
+
+##########################
+########## MOD 3 #########
+##########################
+
+mod3c = lm(dp1[,9] ~ dp1[,10] + dp1[,11] + dp1[,12] + dp1[,17] + dp1[,18] + dp1[,19] +
+dp1[,20] - 1, data = dp1)
+summary(mod3c)
+step(mod3c)
+
+mod3r = lm(dp1[,9] ~ dp1[,11] + dp1[,17] + dp1[,18] + dp1[,19] - 1, data = dp1)
+summary(mod3r)
+
+anova(mod3c,mod3r) # Lack of Fit

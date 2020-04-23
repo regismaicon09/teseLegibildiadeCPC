@@ -1,0 +1,109 @@
+library("plm")
+
+dados = read.csv("C:\\Users\\Douglas Oliveira\\Desktop\\dataBOX\\Mara\\Mara Dados\\Nova Tentativa\\dados_novo2.csv", sep = ";", dec = ",")
+head(dados)
+
+
+dados = read.csv("Users/maicon/Dropbox/dataBOX/PROJETOS/Mara/Mara Dados/Nova Tentativa/dados_novo2.csv", sep = ";", dec = ",")
+
+
+d <-read.csv("~/Dropbox/dataBOX/PROJETOS/Mara/Mara Dados/Nova Tentativa/dados_novo2r.csv",header=T, sep=";",dec=",")
+
+
+
+names(dados)
+nrow(dados)
+nrow(na.omit(dados))
+
+dp = pdata.frame(dados, index=c("Id","Ano"), drop.index=TRUE, row.names=TRUE)
+names(dp)
+head(dp)
+attach(dp)
+
+cor(dp)
+summary(dp)
+ncol(dp)
+
+# CORRELACIONADO
+#
+# ind_atend_esg_mun_atend_agua | ind_coleta_esg - 15/12
+# ind_atend_esg_mun_esg | ind_coleta_esg - 17/12
+# ind_atend_esg_mun_agua | ind_coleta_esg - 18/12
+# ind_trata_esg | ind_esg_trat_agua_cons - 13/16
+# ind_atend_esg_mun_atend_agua | ind_atend_esg_mun_esg - 15/17
+# ind_atend_esg_mun_atend_agua | ind_atend_esg_mun_agua - 15/18
+# ind_atend_esg_mun_esg | ind_atend_esg_mun_agua - 17/18
+
+hist(dp[,1])
+hist(dp[,2])
+hist(dp[,3])
+hist(dp[,4])
+hist(dp[,5])
+hist(dp[,6])
+hist(dp[,7])
+hist(dp[,8])
+hist(dp[,9])
+hist(dp[,10])
+hist(dp[,11])
+hist(dp[,12])
+hist(dp[,13])
+hist(dp[,14])
+hist(dp[,15])
+hist(dp[,16])
+hist(dp[,17])
+hist(dp[,18])
+hist(dp[,19])
+hist(dp[,20])
+hist(dp[,21])
+hist(dp[,22])
+hist(dp[,23])
+hist(dp[,24])
+hist(dp[,25])
+hist(dp[,26])
+hist(dp[,27])
+hist(dp[,28])
+hist(dp[,29])
+hist(dp[,30])
+hist(dp[,31])
+hist(dp[,32])
+
+plot(log(dp[,4]+1),dp[,1])
+plot(log(dp[,5]+1),dp[,1])
+plot(log(dp[,6]+1),dp[,1])
+plot(log(dp[,7]+1),dp[,1])
+plot(log(dp[,8]+1),dp[,1])
+plot(log(dp[,9]+1),dp[,1])
+
+mod1 = plm(dp[,1] ~ dp[,4] + dp[,5] + dp[,6] + dp[,7] + dp[,8] + dp[,9] + dp[,10] + dp[,11] + dp[,12] +
+dp[,13] + dp[,14] + dp[,15] + dp[,16] + dp[,17] + dp[,18] + dp[,19] + dp[,20] + dp[,21] + dp[,22] +
+dp[,23] + dp[,24] + dp[,25] + dp[,26] + dp[,27] + dp[,28] + dp[,29] + dp[,30] + dp[,31] + dp[,32],
+data = dp, model = "pooling")
+
+mod1 = plm(dp[,1] ~ log(dp[,4]+1) + dp[,8]+ dp[,11] + dp[,13] + dp[,15] + dp[,16] + 
+log(dp[,20]+1) + log(dp[,21]+1) + dp[,22] +
+dp[,23] + dp[,24] + dp[,25] + dp[,26] + dp[,27] + dp[,28] + dp[,29] + dp[,30] + dp[,31],
+data = dp, model = "pooling")
+
+summary(mod1)
+names(dp)
+
+
+##########################
+##########################
+
+mod1 = plm(dp[,1] ~ dp[,6] + dp[,7] + log(dp[,8]+1) + 
+dp[,12] + dp[,13], data = dp, model = "pooling")
+
+summary(mod1)
+
+mod2 = plm(dp[,2] ~ log(dp[,4]+1) + dp[,5] + log(dp[,10]+1) + dp[,13] + dp[,14],
+data = dp, model = "pooling")
+
+summary(mod2)
+
+mod3 = plm(dp[,3] ~ log(dp[,4]+1) + dp[,6] + dp[,10], data = dp, model = "pooling")
+
+summary(mod3)
+
+
+

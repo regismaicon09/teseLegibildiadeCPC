@@ -12,7 +12,9 @@ histogram sLegNEMedio, norm
 
 ****** Teste de Normalidade ***** 
 sfrancia sLegNEMedio 
-sktest sLegNEMedio 
+sktest COMPLEX LegNEMedio 
+
+swilk  LegNEMedio setor 
 
 ** Visto que dos dados possuem um distribuição normal podemos rodar os testes paramêtricos de diferença de média
 *ranksum LegNEMedio, by(GC)
@@ -37,9 +39,21 @@ graph box LegNEMedio, over(COMPLEX)
 
 oneway LegNEMedio COMPLEX
 
-oneway LegNEMedio CAPIT
+*oneway LegNEMedio CAPIT
+*oneway LegNEMedio EXT
 
-oneway LegNEMedio EXT
+
+******** Oneway Variaveis Transformadas ********
+** o Resultado não muda ** 
+
+gen sCOMPLEX = COMPLEX^2
+winsor sCOMPLEX, gen(wsCOMPLEX) p(0.05) 
+
+gen sqCAPIT = sqrt(CAPIT) 
+winsor sqCAPIT, gen(wsqCAPIT) p(0.05)
+
+gen sqEXT = sqrt(EXT) 
+winsor sqEXT, gen(WsqEXT) p(0.05) 
 
 
 
@@ -49,6 +63,13 @@ oneway LegNEMedio EXT
 ttest LegNEMedio, by(CAPIT2)
 
 ttest LegNEMedio, by(EXT2)
+
+
+
+
+
+**gen CAPIT3 = 1 if  CAPIT >=15
+
 
 
 

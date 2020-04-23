@@ -1,0 +1,2 @@
+Colocar explicação da constante
+Quantidade de cidades depois da limpeza dos dados

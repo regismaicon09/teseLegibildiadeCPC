@@ -1,0 +1,107 @@
+library("plm")
+library("lmtest")
+library("MASS")
+library("VIF")
+library("nortest")
+library("betareg")
+
+#########################
+# VARIÁVEIS DEPENDENTES #
+#########################
+# - prop_inter_pop_total
+# - prop_dias_perm_internacoes 
+# - prop_obito_internacao
+###########################
+# VARIÁVEIS INDEPENDENTES #
+###########################
+# - prop_pop_acesso_esg
+# - idhm
+# - populacao
+# - pib_percapta
+###########################
+
+dados = read.csv("C:\\Users\\Douglas Oliveira\\Desktop\\dataBOX\\Mara\\Mara Dados\\dados_mara1.csv", sep = ";", dec = ",")
+names(dados)
+head(dados)
+attach(dados)
+
+dados_painel = pdata.frame(dados, index=c("Id","Ano"), drop.index=TRUE, row.names=TRUE)
+names(dados_painel)
+head(dados_painel)
+attach(dados_painel)
+
+summary(dados_painel)
+
+hist(prop_inter_pop_total)
+hist(prop_dias_perm_internacoes)
+hist(prop_obito_internacao)
+hist(prop_pop_acesso_esg)
+hist(idhm)
+hist(populacao)
+hist(pib_percapta)
+hist(cresc_pop)
+hist(prop_pop_atend_com_esgoto)
+
+hist(log(prop_inter_pop_total+1))
+hist(log(prop_dias_perm_internacoes+1))
+hist(log(prop_obito_internacao+1))
+hist(log(prop_pop_acesso_esg+1))
+hist(log(idhm+1))
+hist(log(populacao+1))
+hist(log(pib_percapta+1))
+hist(log(cresc_pop+1))
+hist(log(prop_pop_atend_com_esgoto+1))
+
+correl = data.frame(prop_inter_pop_total,prop_dias_perm_internacoes,prop_obito_internacao,
+prop_pop_acesso_esg,idhm,populacao,pib_percapta,cresc_pop,prop_pop_atend_com_esgoto)
+cor(correl)
+
+###########
+# MODELOS #
+###########
+
+mod1 = plm(prop_inter_pop_total ~ prop_pop_acesso_esg + idhm +
+cresc_pop + prop_pop_atend_com_esgoto, data = dados_painel, model = "pooling")
+
+mod1 = plm(log(prop_inter_pop_total+1) ~ log(prop_pop_acesso_esg+1) + log(idhm+1) +
+log(cresc_pop+1) + log(prop_pop_atend_com_esgoto+1)-1, data = dados_painel, model = "pooling")
+
+mod1 = plm(prop_inter_pop_total ~ prop_pop_acesso_esg + idhm,
+data = dados_painel, model = "pooling")
+
+mod2 = plm(prop_dias_perm_internacoes ~ prop_pop_acesso_esg + idhm +
+cresc_pop + prop_pop_atend_com_esgoto, data = dados_painel, model = "pooling")
+
+
+mod2 = plm(log(prop_dias_perm_internacoes+1) ~ log(prop_pop_acesso_esg+1) + log(idhm+1) +
+log(populacao+1) + log(pib_percapta+1) - 1, data = dados_painel, model = "random")
+
+mod2 = plm(prop_dias_perm_internacoes ~ prop_pop_acesso_esg + idhm,
+data = dados_painel, model = "pooling")
+
+mod3 = plm(prop_obito_internacao ~ prop_pop_acesso_esg + idhm + populacao + pib_percapta,
+data = dados_painel, model = "pooling")
+
+mod3 = plm(log(prop_obito_internacao+1) ~ log(prop_pop_acesso_esg+1) + log(idhm+1) +
+log(populacao+1) + log(pib_percapta+1), data = dados_painel, model = "random")
+
+mod3 = plm(prop_obito_internacao ~ prop_pop_acesso_esg + idhm,
+data = dados_painel, model = "pooling")
+
+summary(mod1)
+summary(mod2)
+summary(mod3)
+
+
+
+###############
+##############
+
+
+mod1 = betareg(prop_inter_pop_total ~ prop_pop_acesso_esg + idhm + populacao +
+cresc_pop + prop_pop_atend_com_esgoto)
+
+summary(mod1)
+
+
+
