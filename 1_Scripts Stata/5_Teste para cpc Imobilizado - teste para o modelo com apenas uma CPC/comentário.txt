@@ -1,0 +1,2 @@
+Nessa caso tentamos rodar o modelo apenas para uma norma da CPC e criar o modelo de regressão. Porem, esse modelo ocultava os efeitos da CPC no legNE.
+A CPC era um váriavel constante!!
