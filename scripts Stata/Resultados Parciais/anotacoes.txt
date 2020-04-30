@@ -4,3 +4,5 @@ Teste Chow de forma a verifica a adequação da relação entre as variáveis ao
 lineares assumiindo uma variância comum. As hipóteses desse teste são: h0: Modelo restrito (pooled) e H1: Modelo irrestrito (dados em painel com efeitos fixos) ( Cameron; Trivedi, 2009).
 
 Teste de Hausman, Modelo aleatório ou efeitos fixos.
+
+https://www.fearp.usp.br/sti/384-instituicional/docentes/docentes-da-contabilidade/2652-marcelo-botelho-da-costa-moraes.html
